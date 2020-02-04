@@ -1,2 +1,2 @@
 # local
-Experiments in local inference for conditional predictive impact
+Local inference for conditional predictive impact
