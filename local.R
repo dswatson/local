@@ -17,7 +17,13 @@ dat <- BostonHousing %>%
   mutate(crim = log(crim), chas = as.numeric(chas) - 1,
          dis = log(dis), rad = log(rad), tax = log(tax),
          y = BostonHousing2$cmedv) %>%
+  rename(black = b) %>%
   select(-medv)
+
+# Global test suggests these ones are irrelevant
+dat <- dat %>% select(-crim, -indus, -age)
+
+# Hyperparameters
 n <- nrow(dat)
 p <- ncol(dat) - 1
 
@@ -55,6 +61,8 @@ mc_fn <- function(b) {
   return(out)
 }
 df <- foreach(b = seq_len(1000), .combine = rbind) %dopar% mc_fn(b)
+
+
 
 
 
