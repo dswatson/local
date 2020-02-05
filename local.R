@@ -60,7 +60,7 @@ mc_fn <- function(b) {
   out[, run := b]
   return(out)
 }
-df <- foreach(b = seq_len(1000), .combine = rbind) %dopar% mc_fn(b)
+df <- foreach(b = seq_len(5000), .combine = rbind) %dopar% mc_fn(b)
 
 
 
