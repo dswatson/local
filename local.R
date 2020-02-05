@@ -42,7 +42,8 @@ mc_fn <- function(b) {
       loss0 <- (tst$y - yhat0)^2
       delta <- loss0 - loss1
       theta <- delta - mean(delta)
-      out <- data.table(colnames(dat)[j] = theta)
+      out <- data.table(theta)
+      colnames(out) <- colnames(dat)[j]
       return(out)
     }
     out <- foreach(j = seq_len(p), .combine = cbind) %do% drop_fn(j)
@@ -53,7 +54,7 @@ mc_fn <- function(b) {
   out[, run := b]
   return(out)
 }
-df <- foreach(b = seq_len(5000), .combine = rbind) %dopar% mc_fn(b)
+df <- foreach(b = seq_len(1000), .combine = rbind) %dopar% mc_fn(b)
 
 
 
