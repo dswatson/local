@@ -1,6 +1,5 @@
 # Load libraries, register cores
 library(mlbench)
-library(data.table)
 library(dplyr)
 library(doMC)
 registerDoMC(8)
@@ -38,11 +37,11 @@ mc_fn <- function(b) {
     loss1 <- (tst$y - yhat1)^2
     # Drop function
     drop_fn <- function(j) {
-      f0 <- lm(y ~ ., data = trn[-j])
+      f0 <- lm(y ~ ., data = trn[, -j])
       yhat0 <- predict(f0, tst)
       loss0 <- (tst$y - yhat0)^2
       delta <- loss0 - loss1
-      out <- data.table(mean(delta))
+      out <- tibble(mean(delta))
       colnames(out) <- colnames(dat)[j]
       return(out)
     }
@@ -50,7 +49,7 @@ mc_fn <- function(b) {
     return(out)
   }
   out <- foreach(splt = c(1, 2), .combine = rbind) %do% delta_fn(splt)
-  out[, run := b]
+  out$run <- b 
   return(out)
 }
 df <- foreach(b = seq_len(1e4), .combine = rbind) %dopar% mc_fn(b)
